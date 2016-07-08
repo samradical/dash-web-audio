@@ -7,8 +7,8 @@ const createAudioContext = require('ios-safe-audio-context')
 let audioCtx, masterGain
 
 var SERVER_BASE = "https://rad.wtf/chewb/"
-var ID = "5XLaA8t0Fkw"
-  //var ID = "3TQZ-2iMUR0"
+//var ID = "5XLaA8t0Fkw"
+var ID = "3TQZ-2iMUR0"
 
 var button = document.querySelector('button');
 
@@ -23,57 +23,9 @@ function init() {
   audioCtx = createAudioContext()
   masterGain = audioCtx.createGain();
   masterGain.connect(audioCtx.destination);
-  /*var p = new Player()
-  p.load(audioCtx,(sound)=>{
-    play(sound.buffer)
-  })*/
   console.log(audioCtx);
-  //start()
-  entire()
+  start()
 }
-
-
-function _createBuffer(buffer) {
-  let _b = new Uint8Array(buffer)
-  var channels = 2
-  var frameCount = audioCtx.sampleRate * 10.007800454;
-  var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
-  for (var channel = 0; channel < channels; channel++) {
-    // This gives us the actual array that contains the data
-    var nowBuffering = myArrayBuffer.getChannelData(channel);
-    for (var i = 0; i < frameCount; i++) {
-      // Math.random() is in [0; 1.0]
-      // audio needs to be in [-1.0; 1.0]
-      nowBuffering[i] = _b[i] / 255 * 2 - 1;
-    }
-  }
-  return myArrayBuffer
-}
-
-function entire() {
-  _getSidx().then(d => {
-    d = d[0]
-
-    var vo = {
-      url: d.url,
-      byteRange: '0-651250',
-      byteLength: 651251
-    }
-
-    _addSegment(vo).then(indexB => {
-      decodeAudioData(indexB).then(audioBuffer => {
-        console.log(audioBuffer);
-        //console.log(audioBuffer.getChannelData(0));
-        console.log("Decoded");
-        play(audioBuffer)
-      }).error(err => {
-        console.log(err);
-        throw new Error()
-      })
-    })
-  })
-}
-
 
 function start() {
   console.log("start");
@@ -100,19 +52,7 @@ function start() {
         var buffer = _appendBuffer(indexB, arrayB)
         console.log("Appended");
 
-        let node = {
-          buf: buffer,
-          sync: 0,
-          retry: 0
-        }
-
-        let b = new AV.Buffer(buffer)
-        let a = new AV.Asset.fromBuffer(b)
-        console.log(b);
-        console.log(a);
-        new AV.Player(a).play();
-        //decode(node)
-        /*decodeAudioData(buffer).then(audioBuffer => {
+        decodeAudioData(buffer).then(audioBuffer => {
           console.log(audioBuffer);
           //console.log(audioBuffer.getChannelData(0));
           console.log("Decoded");
@@ -120,12 +60,11 @@ function start() {
         }).error(err => {
           console.log(err);
           throw new Error()
-        })*/
+        })
       })
     })
   })
 }
-
 
 var _appendBuffer = function(buffer1, buffer2) {
   var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
@@ -168,7 +107,9 @@ function _addSegment(currentVo) {
   });
 }
 
-
+/*
+http://stackoverflow.com/questions/35436771/how-to-decode-only-part-of-the-mp3-for-use-with-webaudio-api
+*/
 function syncStream(node) { // should be done by api itself. and hopefully will.
   var buf8 = new Uint8Array(node.buf);
   buf8.indexOf = Array.prototype.indexOf;
