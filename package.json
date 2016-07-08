@@ -1,0 +1,32 @@
+{
+  "name": "",
+  "version": "0.3.0",
+  "description": "",
+  "main": "app.js",
+  "repository": {
+    "type": "git"
+  },
+  "scripts": {
+    "start": "budo index.js:bundle.js --host 0.0.0.0 --live --open -- -t babelify  | bistre ",
+    "build": "browserify index.js > bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "ios-safe-audio-context": "^1.0.1",
+    "jquery": "^3.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.3.0",
+    "bistre": "^1.0.1",
+    "browserify": "^13.0.1"
+  }
+}
